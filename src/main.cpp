@@ -24,22 +24,14 @@
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/image.hpp"
 
-
-#include <astra/astra.hpp>
-#include <cstdio>
-#include <chrono>
-#include <iostream>
-#include <iomanip>
-#include <key_handler.h>
-
 #include "AstraPro.hpp"
 
 
 
-  int main(int argc, char * argv[])
-  {
-    rclcpp::init(argc, argv);
-    rclcpp::spin(std::make_shared<AstraPro>());
-    rclcpp::shutdown();
-    return 0;
-  }
+int main(int argc, char * argv[])
+{
+rclcpp::init(argc, argv);
+rclcpp::spin(std::make_shared<AstraPro>());
+rclcpp::shutdown();
+return 0;
+}
