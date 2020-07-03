@@ -16,6 +16,15 @@
 // Be excellent to each other.
 
 
+#include <chrono>
+#include <functional>
+#include <memory>
+#include <string>
+
+#include "rclcpp/rclcpp.hpp"
+#include "sensor_msgs/msg/image.hpp"
+
+
 #include <astra/astra.hpp>
 #include <cstdio>
 #include <chrono>
@@ -38,6 +47,7 @@ private:
     unsigned int colorlastHeight_;
 
 public:
+
     virtual void on_frame_ready(astra::StreamReader& reader,
                                 astra::Frame& frame) override
     {
@@ -120,6 +130,7 @@ public:
                       << " g: " << static_cast<int>(middle.g)
                       << " b: " << static_cast<int>(middle.b)
                       << std::endl;
+
         }
     }
 
@@ -153,8 +164,25 @@ private:
     std::chrono::time_point<clock_type> lastTimepoint_{clock_type::now()};
 };
 
-int main(int argc, char** argv)
+
+
+using namespace std::chrono_literals;
+
+/* This example creates a subclass of Node and uses std::bind() to register a
+* member function as a callback from the timer. */
+
+class AstraPro : public rclcpp::Node
 {
+  public:
+    AstraPro()
+    : Node("minimal_publisher"), count_(0)
+    {
+      publisher_ = this->create_publisher<sensor_msgs::msg::Image>("topic", 10);
+      timer_ = this->create_wall_timer(
+      500ms, std::bind(&AstraPro::timer_callback, this));
+
+
+
     astra::initialize();
 
     set_key_handler();
@@ -175,40 +203,40 @@ int main(int argc, char** argv)
 
     reader.add_listener(listener);
 
+
+    /*
     do{
         astra_update();
     } while (shouldContinue);
 
     reader.remove_listener(listener);
+    
+    	
+
     astra::terminate();
+    */
 
+    }
 
-//old main
-
-/*
-
-    astra::StreamSet streamSet;
-    astra::StreamReader reader = streamSet.create_reader();
-
-    ColorFrameListener colorlistener;
-
-    reader.stream<astra::ColorStream>().start();
-
-    std::cout << "colorStream -- hFov: "
-              << reader.stream<astra::ColorStream>().hFov()
-              << " vFov: "
-              << reader.stream<astra::ColorStream>().vFov()
-              << std::endl;
-
-    reader.add_listener(listener);
-
-    do
+  private:
+    void timer_callback()
     {
-        astra_update();
-    } while (shouldContinue);
+      auto message = sensor_msgs::msg::Image();
 
-    reader.remove_listener(listener);
+      
+      //message.data = "Hello, world! " + std::to_string(count_++);
+      //RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.data.c_str());
+      publisher_->publish(message);
+    }
+    rclcpp::TimerBase::SharedPtr timer_;
+    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher_;
+    size_t count_;
+  };
 
-    astra::terminate();
- */   
-}
+  int main(int argc, char * argv[])
+  {
+    rclcpp::init(argc, argv);
+    rclcpp::spin(std::make_shared<AstraPro>());
+    rclcpp::shutdown();
+    return 0;
+  }
