@@ -11,33 +11,18 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-find_package(ament_cmake REQUIRED)
-find_package(cv_bridge REQUIRED)
-find_package(camera_info_manager REQUIRED)
-find_package(image_transport REQUIRED)
-find_package(class_loader REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(image_geometry REQUIRED)
-find_package(rclcpp_components REQUIRED)
-
-set( DEPENDENCIES
-  rclcpp
-  rclcpp_components
-  image_geometry
-  class_loader
-  image_transport
-  camera_info_manager
-  cv_bridge
-)
-
-find_package(OpenCV REQUIRED COMPONENTS core)
-message(STATUS "opencv version ${OpenCV_VERSION}")
-find_package(OpenCV 4 REQUIRED COMPONENTS ${opencv_4_components})
+# specify the C++ standard
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 include_directories(include)
+include_directories(Thirdparty/ReconROS)
+include_directories(/opt/ros/dashing/include)
 include_directories(Thirdparty/AstraSDK-v2.1.1/include)
 
 LINK_DIRECTORIES(Thirdparty/AstraSDK-v2.1.1/lib)
+LINK_DIRECTORIES(/opt/ros/dashing/lib/)
+
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
@@ -75,5 +60,7 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+add_executable(astra_pro_node src/main.cpp )
 
+target_link_libraries( astra_pro_node PRIVATE astra astra_core astra_core_api Threads::Threads rcl rcutils rclcpp std_msgs__rosidl_typesupport_cpp sensor_msgs__rosidl_typesupport_cpp )
 
