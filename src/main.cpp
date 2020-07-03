@@ -177,9 +177,7 @@ class AstraPro : public rclcpp::Node
     AstraPro()
     : Node("minimal_publisher"), count_(0)
     {
-      publisher_ = this->create_publisher<sensor_msgs::msg::Image>("topic", 10);
-      timer_ = this->create_wall_timer(
-      500ms, std::bind(&AstraPro::timer_callback, this));
+
 
 
 
@@ -214,6 +212,9 @@ class AstraPro : public rclcpp::Node
 
         astra::terminate();
         */
+
+        publisher_ = this->create_publisher<sensor_msgs::msg::Image>("topic", 10);
+        timer_ = this->create_wall_timer(500ms, std::bind(&AstraPro::timer_callback, this));
 
     }
 
