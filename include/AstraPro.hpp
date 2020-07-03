@@ -47,7 +47,6 @@ class AstraPro : public rclcpp::Node
   private:
     void camera_update()
     {
-        int cnt = 1000;
         astra::initialize();
 
         set_key_handler();
@@ -58,9 +57,7 @@ class AstraPro : public rclcpp::Node
         FrameListener listener( std::bind(&AstraPro::color_send, this, std::placeholders::_1), 
                                 std::bind(&AstraPro::depth_send, this, std::placeholders::_1));
         reader.stream<astra::ColorStream>().start();
-        //Endnew
 
-        //DepthFrameListener depthListener;
 
         auto depthStream = reader.stream<astra::DepthStream>();
         depthStream.start();
@@ -70,9 +67,8 @@ class AstraPro : public rclcpp::Node
 
 
         do{
-            astra_update(); 
-            cnt--;           
-        } while (cnt);
+            astra_update();         
+        } while (true);
         
         reader.remove_listener(listener);
         
@@ -83,12 +79,7 @@ class AstraPro : public rclcpp::Node
   
     size_t count_;
     std::thread update_thread;
-
     rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr colorpublisher_;
     rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr depthpublisher_;
     
   };
-
-  /*
-
-  */

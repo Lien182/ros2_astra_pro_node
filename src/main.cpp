@@ -15,23 +15,15 @@
 //
 // Be excellent to each other.
 
-
-#include <chrono>
-#include <functional>
-#include <memory>
-#include <string>
-
 #include "rclcpp/rclcpp.hpp"
-#include "sensor_msgs/msg/image.hpp"
-
 #include "AstraPro.hpp"
 
 
 
 int main(int argc, char * argv[])
 {
-rclcpp::init(argc, argv);
-rclcpp::spin(std::make_shared<AstraPro>());
-rclcpp::shutdown();
-return 0;
+    rclcpp::init(argc, argv);
+    rclcpp::spin(std::make_shared<AstraPro>());
+    rclcpp::shutdown();
+    return 0;
 }
