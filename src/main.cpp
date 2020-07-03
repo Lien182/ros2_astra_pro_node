@@ -183,38 +183,38 @@ class AstraPro : public rclcpp::Node
 
 
 
-    astra::initialize();
+        astra::initialize();
 
-    set_key_handler();
+        set_key_handler();
 
-    astra::StreamSet streamSet;
-    astra::StreamReader reader = streamSet.create_reader();
+        astra::StreamSet streamSet;
+        astra::StreamReader reader = streamSet.create_reader();
 
-    //New
-    FrameListener listener;
-    reader.stream<astra::ColorStream>().start();
-    //Endnew
+        //New
+        FrameListener listener;
+        reader.stream<astra::ColorStream>().start();
+        //Endnew
 
-    //DepthFrameListener depthListener;
+        //DepthFrameListener depthListener;
 
-    auto depthStream = reader.stream<astra::DepthStream>();
-    depthStream.start();
-
-
-    reader.add_listener(listener);
+        auto depthStream = reader.stream<astra::DepthStream>();
+        depthStream.start();
 
 
-    /*
-    do{
-        astra_update();
-    } while (shouldContinue);
+        reader.add_listener(listener);
 
-    reader.remove_listener(listener);
-    
-    	
 
-    astra::terminate();
-    */
+        /*
+        do{
+            astra_update();
+        } while (shouldContinue);
+
+        reader.remove_listener(listener);
+        
+            
+
+        astra::terminate();
+        */
 
     }
 
