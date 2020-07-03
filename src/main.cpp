@@ -189,7 +189,6 @@ class AstraPro : public rclcpp::Node
 
         astra::StreamSet streamSet;
         astra::StreamReader reader = streamSet.create_reader();
-
         //New
         FrameListener listener;
         reader.stream<astra::ColorStream>().start();
